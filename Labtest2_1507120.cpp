@@ -3,23 +3,25 @@
 //Mathew Reid
 
 typedef struct{
-    char Description[20];
-    int Quantity;
-	float Price;	
-}Item;
-Item List[20];// array to store 20 items											
+    int Id;
+    char Name[20];
+    char Status;
+    char Location;	
+}Book;
+Book Books[50];// array to store 50 items											
 
 void Menu();
-void Select(int choice); // select function accept one va
-void addItem();
-void updatePrice();
-void printBill();
-int index, i;
+void Select(int choice);
+void addBook();
+void loanBook();
+void viewBooks();
+int index,i;
+int id = 1;
 
 int main(){
 	index = 0;
 	for(i = 0; i < 20; i++){
-		List[i].Quantity = 0;
+		Books[i].Id = 0;
 	}
 	Menu();	
 	return 0;
@@ -32,9 +34,9 @@ void Menu(){ // this function return an int for the option selected to be utiliz
 
     printf("________________________\n");
     printf("|         Menu         |\n");
-    printf("|  1. Add Item         |\n");
-    printf("|  2. Update Price     |\n");
-    printf("|  3. Print Bill       |\n");
+    printf("|  1. Add Book         |\n");
+    printf("|  2. Loan Book        |\n");
+    printf("|  3. View Books       |\n");
     printf("|  4. Exit             |\n");
     printf("|______________________|\n");
     printf(" Choice: ");
@@ -49,13 +51,13 @@ void Menu(){ // this function return an int for the option selected to be utiliz
 void Select(int choice){// this function use the value returned by the main function 
 
 	switch (choice) {
-    case 1: addItem();
+    case 1: addBook();
 			break;
 			
-    case 2: updatePrice();
+    case 2: loanBook();
 			break;
 			
-    case 3: printBill();
+    case 3: viewBooks();
 			break;
 	case 4: system("exit");
 			break;
@@ -66,40 +68,57 @@ void Select(int choice){// this function use the value returned by the main func
 } 
 	
 
-void addItem(){
-	if(index == 19){// handle the error if user tries to enter item when list has reach the limit
-		printf("The list is full");
+void addBook(){
+	if(index == 49){// handle the error if user tries to enter item when list has reach the limit
+		printf("The shelf is full");
 	}else{	
-		printf("\n Please enter number of item:");
-		scanf("%d", &List[index].Quantity);//sstore the data in the correct index of the list
+		printf("\n Your Book ID is %d: ",id);
+		Books[index].Id = id;
+		Books[index].Status = 'A';
+		printf("\n Please enter name of book:");
+		scanf("%s", Books[index].Name);//sstore the data in the correct index of the list
 		
-		printf("\n Please enter item description:");
-		scanf("%s", &List[index].Description);	
+		printf("\n Please enter location to store book, Shelf:");
+		scanf("%s", &Books[index].Location);	
 	}
 	index ++;
 	fflush(stdin);
 	Menu();
 }
 
-void updatePrice(){
+void loanBook(){
 	int index = 0;
-	while(List[index].Quantity > 0){ 
-		printf("\n Please enter price for each %s $: ", List[index].Description);
-		scanf("%f", &List[index].Price);
+	int key;
+	int flag = 0;
+	printf("\n Please Id# of book wish to loan: ");
+	scanf("%d", &key);
+	while(Books[index].Id > 0){
+	    if(Books[index].Id == key && Books[index].Status == 'A'){
+	        Books[index].Status = 'L';
+	        flag = 1;
+	    }
 		index ++;
+	}
+	if(flag == 1){
+	   printf("\n Book was Loaned successfully: "); 
+	}else{
+	     printf("\n Book was not found: "); 
 	}
 	fflush(stdin);
 	Menu();
 }
 
-void printBill(){
+void viewBooks(){
 	int index = 0;
-	float total = 0;
-	printf(" Quantity \t Description \t Total Cost");
-	while(List[index].Quantity > 0){
-		printf("%d \t",List[index].Quantity);
-		printf("%s \t",List[index].Description);
-		printf("%f",List[index].Price * List[index].Quantity);
+	printf(" Id \t Name \t Location \t  Status\n");
+	for(index = 0; index < 50; index++){
+	    if(Books[index].Id != 0){
+    		printf("%d ",Books[index].Id);
+    		printf("%s \t",Books[index].Name);
+    		printf("%c \t",Books[index].Location);
+    		printf("%c \n",Books[index].Status);
+	    }
+		index++;
 	}
 	fflush(stdin);
 	Menu();		
